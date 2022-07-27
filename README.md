@@ -1,2 +1,2 @@
-# Coding-Challenges---SrataScratch
+# Coding-Challenges-SrataScratch
 This repository contains my solutions for coding challenges on StrataScratch
