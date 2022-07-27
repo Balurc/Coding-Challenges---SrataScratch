@@ -1,3 +1,151 @@
+Counting Instances in Text
+--------------------------
+Solution:
+
+select word,
+        nentry                                       
+from ts_stat('select to_tsvector(contents) from google_file_store') 
+where word ilike 'bull' or word ilike 'bear';
+
+Find matching hosts and guests in a way that they are both of the same gender and nationality
+---------------------------------------------------------------------------------------------
+Solution:
+
+select distinct h.host_id,
+                g.guest_id
+from airbnb_hosts h
+join airbnb_guests g 
+        on h.nationality = g.nationality and h.gender = g.gender
+        
+Number Of Units Per Nationality
+-------------------------------
+Solution:
+
+select h.nationality, 
+        count(distinct u.unit_id) as num_apartments
+from airbnb_hosts h
+join airbnb_units u
+    on h.host_id = u.host_id
+where h.age < 30
+    and u.unit_type = 'Apartment'
+group by h.nationality
+order by n_apartments desc;
+
+Ranking Most Active Guests
+--------------------------
+Solution:
+
+with sum_messages as (
+select id_guest, 
+        sum(n_messages) as sum_n_messages
+from airbnb_contacts
+group by id_guest
+)
+select dense_rank() over (order by sum_n_messages desc) as rnk, 
+        id_guest,
+        sum_n_messages
+from sum_messages
+
+Income By Title and Gender
+--------------------------
+Solution:
+
+select t1.employee_title, 
+        t1.sex, 
+        avg(t1.salary+ t2.bonus) as avg_compensation 
+from sf_employee t1
+join (select worker_ref_id, sum(bonus) as bonus 
+        from sf_bonus
+        group by worker_ref_id) t2
+  on t1.id = t2.worker_ref_id
+group by t1.employee_title, t1.sex;
+
+Number of Streets Per Zip Code
+------------------------------
+Solution:
+
+select business_postal_code,
+       count(distinct case when left(business_address, 1) ~ '^[0-9]' then lower(split_part(business_address, ' ', 2))
+                           else lower(split_part(business_address, ' ', 1))
+                        end) as num_streets
+from sf_restaurant_health_violations
+where business_postal_code is not null
+group by business_postal_code
+order by num_streets desc,
+         business_postal_code asc;
+
+Largest Olympics
+----------------
+Solution:
+
+select games, 
+        count(distinct id) as num_athletes
+from olympics_athletes_events
+group by games
+order by n_athletes desc
+limit 1;
+
+Most Profitable Companies
+-------------------------
+Solution:
+
+select company, 
+        profits
+from forbes_global_2010_2014
+order by profits desc
+limit 3;
+
+Find the rate of processed tickets for each type
+------------------------------------------------
+Solution:
+
+select type,
+        sum(case when processed then 1 else 0 end)::numeric / count(*) as processed_rate
+from facebook_complaints
+group by type;
+
+Find the top 10 ranked songs in 2010
+------------------------------------
+Solution:
+
+select distinct year_rank, 
+        group_name, 
+        song_name
+from billboard_top_100_year_end
+where year = '2010'
+    and year_rank < 11
+order by year_rank asc;
+
+Top Ranked Songs
+----------------
+Solution:
+
+select trackname, 
+        count(*) as num_top
+from spotify_worldwide_daily_song_ranking
+where position = 1
+group by trackname
+order by n_top desc;
+
+Find all wineries which produce wines by possessing aromas of plum, cherry, rose, or hazelnut
+---------------------------------------------------------------------------------------------
+Solution:
+
+select distinct winery 
+from winemag_p1 
+where lower(description) similar to '%(plum|cherry|rose|hazelnut)%';
+
+Top Businesses With Most Reviews
+--------------------------------
+Solution:
+
+select name, 
+        sum(review_count) as num_reviews
+from yelp_business
+group by name
+order by n_reviews desc
+limit 5;
+
 Bikes Last Used
 ---------------
 Solution:
