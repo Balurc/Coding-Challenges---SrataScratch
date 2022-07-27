@@ -36,7 +36,6 @@ join facebook_reactions t2
     on t1.post_id = t2.post_id
 where t2.reaction = 'heart';
 
-
 Lyft Driver Wages
 -----------------
 Solution:
@@ -64,8 +63,6 @@ select employeename,
         basepay
 from sf_public_salaries
 where jobtitle ilike '%police%';
-
-
 
 Find libraries who haven't provided the email address in circulation year 2016 but their notice preference definition is set to email
 -------------------------------------------------------------------------------------------------------------------------------------
