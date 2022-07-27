@@ -1,8 +1,99 @@
 Bikes Last Used
-----------------------
+---------------
 Solution:
+
 select bike_number,
         max(end_time) as last_used
 from dc_bikeshare_q1_2012
 group by bike_number
 order by last_used desc;
+
+Find how many times each artist appeared on the Spotify ranking list
+--------------------------------------------------------------------
+Solution:
+
+select artist, 
+        count(*) as num_occurences
+from spotify_worldwide_daily_song_ranking
+group by artist
+order by num_occurences desc;
+
+Count the number of movies that Abigail Breslin nominated for oscar
+-------------------------------------------------------------------
+Solution:
+
+select count(distinct movie) as n_movies_by_abi
+from oscar_nominees
+where nominee = 'Abigail Breslin';
+
+Find all posts which were reacted to with a heart
+-------------------------------------------------
+Solution:
+
+select distinct t1.*
+from facebook_posts t1
+join facebook_reactions t2
+    on t1.post_id = t2.post_id
+where t2.reaction = 'heart';
+
+
+Lyft Driver Wages
+-----------------
+Solution:
+
+select * 
+from lyft_drivers
+where yearly_salary <= 30000 or yearly_salary >= 70000;
+
+Find the most profitable company in the financial sector of the entire world along with its continent
+-----------------------------------------------------------------------------------------------------
+Solution:
+
+select company, 
+        continent
+from forbes_global_2010_2014
+where sector = 'Financials'
+order by profits desc
+limit 1;
+
+Find the base pay for Police Captains
+-------------------------------------
+Solution:
+
+select employeename, 
+        basepay
+from sf_public_salaries
+where jobtitle ilike '%police%';
+
+
+
+Find libraries who haven't provided the email address in circulation year 2016 but their notice preference definition is set to email
+-------------------------------------------------------------------------------------------------------------------------------------
+Solution:
+
+select distinct home_library_code
+from library_usage
+where notice_preference_definition = 'email'
+    and provided_email_address = 'FALSE'
+    and circulation_active_year = '2016';
+
+Churro Activity Date
+--------------------
+Solution:
+
+select activity_date,
+        pe_description
+from los_angeles_restaurant_health_inspections
+where facility_name = 'STREET CHURROS'
+    and score < 95;
+
+Count the number of user events performed by MacBookPro users
+-------------------------------------------------------------
+Solution:
+
+select event_name, 
+        count(*) as num_occurences
+from playbook_events
+where device = 'macbook pro'
+group by event_name
+order by n_occurences desc;
